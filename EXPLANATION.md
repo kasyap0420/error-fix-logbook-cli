@@ -1,22 +1,21 @@
-# Error Fix Logbook CLI - Project Explanation
+# Error Fix Logbook CLI - Explanation
 
 ## What Problem This Project Solves
 
-Students often face the same programming errors multiple times while learning coding, tools, Git, Python, Java, databases, and frontend setup.
+Students often face repeated programming errors while learning coding, tools, Git, Python, Java, databases, frontend setup, and command-line usage.
 
-Usually, the student searches online, fixes the issue, and later forgets:
+Many times, the student fixes the issue once but forgets:
 
-- What the error was
-- Why it happened
-- What command fixed it
-- Which technology caused it
-- What should be remembered next time
+* What the error message was
+* Why the error happened
+* Which command fixed it
+* Which technology caused it
+* Where the fix came from
+* Whether the issue is fully fixed or still needs review
 
-This project solves that simple problem by storing programming errors and fixes in a local JSON file.
+This project solves that problem by giving the user a simple command-line tool to save error notes locally.
 
-The user can add error notes, search them, filter them by technology, delete old notes, and export all notes to a Markdown file.
-
-This is a beginner-level Python CLI project.
+The saved notes can be searched, filtered, edited, deleted, backed up, and exported.
 
 ---
 
@@ -24,20 +23,29 @@ This is a beginner-level Python CLI project.
 
 This project was built for Kasyap Yanamandra, a final-year B.Tech CSE student preparing for internships and campus placements.
 
-The project is meant to prove practical beginner Python skills such as:
+The project shows practical Python skills without using unnecessary frameworks.
 
-- CLI menu design
-- User input handling
-- File handling
-- JSON storage
-- Search logic
-- Filter logic
-- Delete logic
-- Markdown export
-- Git and GitHub workflow
-- Clean documentation
+It demonstrates:
 
-This project does not use a database, web framework, AI API, or external packages.
+* Python functions
+* Modular code organization
+* CLI menu handling
+* Input validation
+* JSON file storage
+* Search logic
+* Filter logic
+* Sorting logic
+* Edit logic
+* Backup handling
+* Markdown export
+* CSV export
+* Unit testing
+* GitHub workflow
+* Clear documentation
+
+This project should be explained as an intermediate Python CLI learning project.
+
+It should not be described as production-ready, AI-powered, advanced, enterprise-level, or professional-grade.
 
 ---
 
@@ -45,13 +53,13 @@ This project does not use a database, web framework, AI API, or external package
 
 ## Python 3
 
-Python is used to build the command-line program.
+Python is used to build the CLI application.
 
 ## JSON
 
-JSON is used to store saved error notes locally.
+JSON is used as local file storage.
 
-The storage file is:
+Main data file:
 
 ```text
 data/error_notes.json
@@ -59,47 +67,219 @@ data/error_notes.json
 
 ## Markdown
 
-Markdown is used for exporting saved notes.
+Markdown is used to export readable notes.
 
-Exported files are created inside:
+Markdown exports are created inside:
 
 ```text
 exports/
 ```
 
-## Python Standard Library Modules
+## CSV
 
-The project uses only built-in Python modules:
+CSV export is used to create spreadsheet-friendly output.
+
+CSV exports are created inside:
+
+```text
+exports/
+```
+
+## unittest
+
+Python `unittest` is used for basic service-level tests.
+
+Test file:
+
+```text
+tests/test_note_service.py
+```
+
+---
+
+## Python Standard Library Modules Used
+
+The project uses only Python standard library modules:
 
 ```text
 json
+csv
 datetime
 pathlib
+shutil
+os
+unittest
 ```
 
-No third-party packages are required.
+No external packages are required.
 
 ---
 
 ## Folder Explanation
 
-```text
-error-fix-logbook-cli/
+## `main.py`
+
+Entry point of the application.
+
+It imports and runs:
+
+```python
+from app.menu import run_app
 ```
 
-Main project folder.
+It also catches `KeyboardInterrupt`, so if the user presses `Ctrl + C`, the program stops safely.
 
-```text
-main.py
+---
+
+## `app/`
+
+Contains the main application code.
+
+This folder makes the project more organized than keeping everything inside one large `main.py` file.
+
+---
+
+## `app/__init__.py`
+
+Marks the `app` folder as a Python package.
+
+---
+
+## `app/menu.py`
+
+Handles the terminal interface.
+
+It contains:
+
+* Main menu
+* Header display
+* User input flow
+* Add note screen
+* View notes screen
+* Search screen
+* Filter screen
+* Edit screen
+* Delete screen
+* Dashboard screen
+* Export screen
+* Backup screen
+* Exit confirmation
+
+This file connects user choices to the service functions.
+
+---
+
+## `app/storage.py`
+
+Handles file and folder operations.
+
+It is responsible for:
+
+* Creating required folders
+* Creating `data/error_notes.json` if missing
+* Loading notes from JSON
+* Saving notes to JSON
+* Creating backup files
+
+Important functions:
+
+```python
+ensure_project_files()
+load_notes()
+save_notes(notes)
+create_backup()
 ```
 
-Contains the full Python CLI program.
+---
 
-```text
-data/error_notes.json
+## `app/note_service.py`
+
+Contains the main note logic.
+
+It is responsible for:
+
+* Creating notes
+* Normalizing old and new note data
+* Finding notes by ID
+* Updating notes
+* Deleting notes
+* Searching notes
+* Filtering notes
+* Sorting notes
+* Creating dashboard counts
+
+Important functions:
+
+```python
+create_note(notes, note_data)
+find_note_by_id(notes, note_id)
+update_note(notes, note_id, updates)
+delete_note(notes, note_id)
+search_notes(notes, keyword)
+filter_by_technology(notes, technology)
+filter_by_tag(notes, tag)
+filter_by_status(notes, status)
+filter_by_difficulty(notes, difficulty)
+sort_notes(notes, sort_type)
+get_dashboard(notes)
 ```
 
-Stores all saved error notes as a JSON array.
+---
+
+## `app/export_service.py`
+
+Handles export logic.
+
+It can export:
+
+* All notes to Markdown
+* One note to Markdown
+* All notes to CSV
+
+Important functions:
+
+```python
+export_all_to_markdown(notes)
+export_one_to_markdown(note)
+export_all_to_csv(notes)
+```
+
+---
+
+## `app/validators.py`
+
+Contains reusable input and validation helpers.
+
+It stores valid choices for:
+
+* Status
+* Difficulty
+* Source
+
+Important constants:
+
+```python
+STATUSES = ["OPEN", "FIXED", "NEEDS_REVIEW"]
+DIFFICULTIES = ["EASY", "MEDIUM", "HARD"]
+SOURCES = ["SELF", "DOCUMENTATION", "COLLEGE", "YOUTUBE", "STACK_OVERFLOW", "CHATGPT", "OTHER"]
+```
+
+Important functions:
+
+```python
+get_required_input(label)
+get_optional_input(label)
+parse_tags(tags_text)
+choose_from_options(title, options, allow_empty=False)
+ask_yes_no(label)
+get_note_id()
+```
+
+---
+
+## `data/error_notes.json`
+
+Stores all saved notes as a JSON array.
 
 Initial content:
 
@@ -107,442 +287,176 @@ Initial content:
 []
 ```
 
+---
+
+## `exports/`
+
+Stores generated export files.
+
+Generated files are ignored by Git:
+
+```text
+exports/*.md
+exports/*.csv
+```
+
+The folder is tracked using:
+
 ```text
 exports/.gitkeep
 ```
 
-Keeps the empty `exports` folder tracked in Git.
+---
+
+## `backups/`
+
+Stores backup JSON files.
+
+A backup is created before deleting a note.
+
+Generated backup files are ignored by Git:
 
 ```text
-README.md
+backups/*.json
 ```
 
-Explains the project purpose, setup steps, run command, features, and usage.
+The folder is tracked using:
 
 ```text
-EXPLANATION.md
+backups/.gitkeep
 ```
-
-Explains how the project works internally.
-
-```text
-MANUAL_TESTING.md
-```
-
-Contains manual test cases.
-
-```text
-requirements.txt
-```
-
-Shows that no third-party packages are needed.
-
-```text
-.gitignore
-```
-
-Ignores Python cache files, virtual environment folders, editor folders, logs, and generated export files.
 
 ---
 
-## Data Flow Explanation
+## `tests/test_note_service.py`
 
-The project follows this flow:
+Contains unit tests for the note service logic.
 
-```text
-User selects menu option
-        ↓
-Program calls related function
-        ↓
-Program loads notes from JSON file
-        ↓
-Program performs add/view/search/filter/delete/export operation
-        ↓
-Program saves updated data when needed
-        ↓
-Program shows output in terminal
+Tests cover:
+
+* Creating notes
+* Searching notes
+* Filtering by technology
+* Filtering by tag
+* Finding note by ID
+* Updating note
+* Deleting note
+* Dashboard count
+
+Run tests with:
+
+```powershell
+python -m unittest discover -s tests
 ```
 
-Each error note is stored as a dictionary inside a JSON array.
+---
 
-Example note:
+## Data Model
+
+Each note contains these fields:
+
+```text
+id
+title
+technology
+error_message
+root_cause
+fix
+command_used
+tags
+status
+difficulty
+source
+created_at
+updated_at
+```
+
+Example:
 
 ```json
 {
     "id": 1,
-    "title": "ModuleNotFoundError in Python",
+    "title": "Python ModuleNotFoundError",
     "technology": "Python",
     "error_message": "ModuleNotFoundError: No module named 'requests'",
-    "root_cause": "The package was not installed in the active virtual environment.",
-    "fix": "Install the package inside the active environment.",
+    "root_cause": "requests package was not installed",
+    "fix": "Install requests using pip",
     "command_used": "pip install requests",
-    "tags": ["python", "pip", "module"],
-    "created_at": "2026-07-09 15:30:10"
+    "tags": ["python", "pip", "venv"],
+    "status": "FIXED",
+    "difficulty": "EASY",
+    "source": "SELF",
+    "created_at": "2026-07-09 16:40:35",
+    "updated_at": "2026-07-09 16:40:35"
 }
 ```
 
 ---
 
-## Function-by-Function Explanation
+## Data Flow Explanation
 
-## `setup_project_files()`
-
-Creates required folders and files if they are missing.
-
-It creates:
-
-- `data/`
-- `exports/`
-- `data/error_notes.json`
-- `exports/.gitkeep`
-
-This prevents the program from crashing if required files or folders are missing.
-
----
-
-## `load_notes()`
-
-Reads notes from:
+The application follows this flow:
 
 ```text
-data/error_notes.json
-```
-
-If the file is missing, empty, or invalid, the program safely returns an empty list.
-
-This helps the program continue instead of crashing.
-
----
-
-## `save_notes(notes)`
-
-Writes the current notes list into the JSON file.
-
-It uses:
-
-```python
-json.dump(notes, file, indent=4)
-```
-
-The `indent=4` keeps the JSON file readable.
-
----
-
-## `get_required_input(label)`
-
-Takes input from the user.
-
-If the user enters an empty value, the program asks again.
-
-This is used for important fields like:
-
-- Title
-- Technology
-- Error message
-- Root cause
-- Fix
-
----
-
-## `get_optional_input(label)`
-
-Takes optional input from the user.
-
-This is used for:
-
-- Command used
-- Tags
-
-These fields can be empty.
-
----
-
-## `parse_tags(tags_text)`
-
-Converts comma-separated tags into a Python list.
-
-Example input:
-
-```text
-python, pip, error
-```
-
-Converted output:
-
-```python
-["python", "pip", "error"]
+User selects menu option
+        ↓
+menu.py receives the input
+        ↓
+menu.py calls service/storage/export function
+        ↓
+storage.py loads data from JSON
+        ↓
+note_service.py processes data
+        ↓
+storage.py saves updated data when needed
+        ↓
+menu.py displays result in terminal
 ```
 
 ---
 
-## `get_next_id(notes)`
-
-Finds the next note ID.
-
-If there are no notes, the first ID is:
-
-```text
-1
-```
-
-If the highest saved ID is `4`, the next ID becomes:
-
-```text
-5
-```
-
----
-
-## `add_note()`
-
-Adds a new error note.
-
-It asks the user for:
-
-- Title
-- Technology
-- Error message
-- Root cause
-- Fix
-- Command used
-- Tags
-
-Then it creates a note dictionary and saves it to the JSON file.
-
----
-
-## `format_tags(tags)`
-
-Converts the tags list into readable text.
-
-If tags exist:
-
-```text
-python, pip, error
-```
-
-If no tags exist:
-
-```text
-No tags
-```
-
----
-
-## `print_note_summary(note)`
-
-Prints a short version of one note.
-
-It shows:
-
-- ID
-- Title
-- Technology
-- Tags
-- Created date
-
-This is used in:
-
-- View all notes
-- Search results
-- Technology filter results
-
----
-
-## `view_all_notes()`
-
-Displays all saved notes.
-
-If no notes exist, it shows:
-
-```text
-No error notes found.
-```
-
----
-
-## `find_note_by_id(notes, note_id)`
-
-Finds one note using its ID.
-
-If the note exists, it returns the note.
-
-If not found, it returns:
-
-```text
-None
-```
-
----
-
-## `print_note_detail(note)`
-
-Prints the full details of one note.
-
-It displays:
-
-- ID
-- Title
-- Technology
-- Error message
-- Root cause
-- Fix
-- Command used
-- Tags
-- Created date
-
----
-
-## `view_note_detail()`
-
-Asks the user to enter a note ID.
-
-If the ID exists, the full note is displayed.
-
-If the ID does not exist, the program shows:
-
-```text
-No note found with that ID.
-```
-
----
-
-## `note_matches_keyword(note, keyword)`
-
-Checks whether the search keyword exists in any important field.
-
-Search checks:
-
-- Title
-- Technology
-- Error message
-- Root cause
-- Fix
-- Command used
-- Tags
-
-The search is case-insensitive.
-
-That means `python`, `Python`, and `PYTHON` are treated as matching text.
-
----
-
-## `search_notes()`
-
-Asks the user for a keyword.
-
-Then it searches all saved notes.
-
-If matching notes exist, it displays them.
-
-If no matching notes exist, it shows:
-
-```text
-No matching notes found.
-```
-
----
-
-## `filter_notes_by_technology()`
-
-Asks the user for a technology name.
-
-Then it displays notes where the technology field matches the entered value.
-
-Example:
-
-```text
-Python
-```
-
-can match:
-
-```text
-Python
-Python 3
-Core Python
-```
-
----
-
-## `delete_note()`
-
-Deletes one note by ID.
-
-The program first shows the full note details.
-
-Then it asks the user to type:
-
-```text
-YES
-```
-
-Only then the note is deleted.
-
-If the user types anything else, deletion is cancelled.
-
-This avoids accidental deletion.
-
----
-
-## `safe_markdown_value(value)`
-
-Prepares values before exporting to Markdown.
-
-If a field is empty, it writes:
-
-```text
-Not recorded
-```
-
-If the value is a list, it converts the list into comma-separated text.
-
----
-
-## `export_notes_to_markdown()`
-
-Exports all saved notes to a Markdown file inside the `exports/` folder.
-
-The export filename includes date and time.
-
-Example:
-
-```text
-error_notes_export_20260709_153010.md
-```
-
-If there are no notes, export is not created.
-
----
-
-## `show_menu()`
-
-Displays the CLI menu.
-
-The menu contains options from `1` to `8`.
-
----
-
-## `main()`
-
-Runs the main program loop.
-
-It keeps showing the menu until the user selects option `8`.
+## What Happens When the Program Starts
+
+1. `main.py` calls `run_app()`.
+2. `run_app()` calls `ensure_project_files()`.
+3. Required folders and files are created if missing.
+4. The header and dashboard summary are displayed.
+5. The main menu is shown.
+6. The program waits for user input.
 
 ---
 
 ## What Happens When a User Adds a Note
 
 1. User selects option `1`.
-2. Program asks for note details.
-3. Program validates required fields.
-4. Program creates a dictionary for the new note.
-5. Program assigns the next ID.
-6. Program adds current date and time.
-7. Program loads existing notes from JSON.
-8. Program appends the new note.
-9. Program saves the updated list to JSON.
-10. Program shows the saved note ID.
+2. `add_note_menu()` asks for note details.
+3. Required fields are validated.
+4. Tags are converted into a list.
+5. Status, difficulty, and source are selected from fixed options.
+6. `create_note()` creates a new note dictionary.
+7. The note gets a new ID.
+8. `created_at` and `updated_at` are added.
+9. `save_notes()` writes the updated notes list to JSON.
+10. The program shows the saved note ID.
+
+---
+
+## What Happens When a User Views Notes
+
+1. User selects option `2`.
+2. The program loads notes from JSON.
+3. The user selects sorting type.
+4. Notes are sorted.
+5. Short note summaries are displayed.
+
+Sorting options:
+
+```text
+newest
+oldest
+title
+technology
+```
 
 ---
 
@@ -550,37 +464,129 @@ It keeps showing the menu until the user selects option `8`.
 
 1. User selects option `3`.
 2. Program asks for a keyword.
-3. Program loads all notes from JSON.
-4. Program checks the keyword against multiple fields.
-5. Matching notes are collected.
-6. Program displays matching notes.
-7. If no match exists, a clear message is shown.
+3. Notes are loaded from JSON.
+4. `search_notes()` checks the keyword against multiple fields.
+5. Matching notes are displayed.
+6. If nothing matches, the program shows a clear message.
+
+Search checks:
+
+* Title
+* Technology
+* Error message
+* Root cause
+* Fix
+* Command used
+* Tags
+* Status
+* Difficulty
+* Source
+
+---
+
+## What Happens When a User Filters Notes
+
+1. User selects option `4`.
+2. Program asks what to filter by.
+3. User selects one of these options:
+
+```text
+Technology
+Tag
+Status
+Difficulty
+```
+
+4. Related filter function is called.
+5. Matching notes are displayed.
+6. If no notes match, the program shows a clear message.
+
+---
+
+## What Happens When a User Views One Note
+
+1. User selects option `5`.
+2. Program asks for note ID.
+3. `find_note_by_id()` searches the saved notes.
+4. If found, full note details are displayed.
+5. If not found, the program shows a clear message.
+
+---
+
+## What Happens When a User Edits a Note
+
+1. User selects option `6`.
+2. Program asks for note ID.
+3. Existing note details are displayed.
+4. User can press Enter to keep current values.
+5. User can enter new values for selected fields.
+6. User can change status, difficulty, and source.
+7. `update_note()` updates the note.
+8. `updated_at` is changed.
+9. Updated data is saved to JSON.
+10. Updated note details are displayed.
 
 ---
 
 ## What Happens When a User Deletes a Note
 
-1. User selects option `6`.
-2. Program asks for the note ID.
-3. Program searches for that note.
-4. If found, full note details are displayed.
-5. Program asks for confirmation.
-6. User must type `YES`.
-7. Program removes the note.
-8. Program saves the updated list to JSON.
-9. Program displays success message.
+1. User selects option `7`.
+2. Program asks for note ID.
+3. Existing note details are displayed.
+4. Program asks for confirmation.
+5. If user confirms, `create_backup()` creates a backup JSON file.
+6. `delete_note()` removes the note.
+7. Updated notes are saved to JSON.
+8. Program displays backup file path.
+
+This reduces the risk of accidental data loss.
+
+---
+
+## What Happens When a User Opens Dashboard
+
+1. User selects option `8`.
+2. Notes are loaded from JSON.
+3. `get_dashboard()` counts notes by status and difficulty.
+4. Technologies are collected.
+5. Summary is displayed.
+
+Dashboard includes:
+
+* Total notes
+* Open notes
+* Fixed notes
+* Needs review notes
+* Easy notes
+* Medium notes
+* Hard notes
+* Technologies used
 
 ---
 
 ## What Happens When a User Exports Notes
 
-1. User selects option `7`.
-2. Program loads all notes from JSON.
-3. If there are no notes, export is skipped.
-4. Program creates a Markdown file name using date and time.
-5. Program formats each note into Markdown.
-6. Program saves the file inside `exports/`.
-7. Program prints the export file path.
+1. User selects option `9`.
+2. Program asks for export type.
+3. User can select:
+
+```text
+Export all notes to Markdown
+Export one note to Markdown
+Export all notes to CSV
+```
+
+4. Export file is created inside `exports/`.
+5. File path is displayed.
+
+---
+
+## What Happens When a User Creates Backup
+
+1. User selects option `10`.
+2. `create_backup()` copies `data/error_notes.json`.
+3. Backup is saved inside `backups/`.
+4. Backup file path is displayed.
 
 ---
 
@@ -589,53 +595,75 @@ It keeps showing the menu until the user selects option `8`.
 Kasyap should be able to explain:
 
 1. Why this project was built
-2. How the CLI menu works
-3. How Python functions are used
-4. How user input is collected
-5. Why JSON was used instead of a database
-6. How notes are stored as a list of dictionaries
-7. How file handling works
-8. How `pathlib` handles file paths
-9. How search works across multiple fields
-10. How technology filter works
-11. Why delete confirmation is used
-12. How Markdown export works
-13. What happens if the JSON file is missing
-14. Why only the standard library was used
-15. What the limitations are
+2. Why CLI was used
+3. Why JSON was used instead of a database
+4. What each folder does
+5. Why the project was split into modules
+6. How `main.py` starts the app
+7. How `menu.py` handles user interaction
+8. How `storage.py` handles JSON files
+9. How `note_service.py` handles business logic
+10. How `export_service.py` handles Markdown and CSV exports
+11. How `validators.py` handles reusable input validation
+12. How search works
+13. How filters work
+14. How edit works
+15. Why backup before delete is useful
+16. How unit tests were added
+17. What limitations the project has
+18. What can be improved later
+
+---
+
+## Why This Is Intermediate Compared to the First Version
+
+The first version had most logic inside `main.py`.
+
+The upgraded version is better because:
+
+* Code is split into modules
+* Logic is easier to test
+* Edit feature was added
+* Dashboard was added
+* Status tracking was added
+* Difficulty tracking was added
+* Source tracking was added
+* Tag filtering was added
+* Sorting was added
+* Backup before delete was added
+* CSV export was added
+* Unit tests were added
 
 ---
 
 ## Limitations
 
-This is a beginner-level CLI project.
-
 Current limitations:
 
-- No database
-- No login system
-- No edit note feature
-- No tag filter
-- No sorting option
-- No unit tests
-- No GUI
-- No web app
-- No cloud storage
-- No multi-user support
-
-These limitations are acceptable for the current project scope.
+* No database
+* No GUI
+* No web interface
+* No login system
+* No cloud backup
+* No automatic error detection
+* No AI suggestions
+* No duplicate detection
+* No installable package command
+* Basic unit test coverage only
 
 ---
 
 ## Future Improvements
 
-Possible future improvements:
+Possible improvements:
 
-- Add edit note option
-- Add filter by tag
-- Add sorting by date
-- Add CSV export
-- Add unit tests
-- Add backup before delete
-- Add sample notes for demo
-- Add better corrupted JSON recovery
+* Add GUI using Tkinter
+* Add duplicate note detection
+* Add import from CSV
+* Add tag statistics
+* Add more tests
+* Add edit history
+* Add archive feature
+* Add packaged CLI command
+* Add sample demo data
+* Add screenshots to README
