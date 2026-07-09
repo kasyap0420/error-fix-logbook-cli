@@ -413,16 +413,17 @@ Current limitations:
 
 ---
 
-## Future Improvements
+## Future Scope
 
-Possible future improvements:
+This project can be improved in the future with:
 
-* Add Tkinter GUI version
-* Add more unit tests
-* Add import from CSV
-* Add tag statistics
-* Add duplicate note warning
-* Add archive option
-* Add command history view
-* Package as installable Python CLI
-* Add screenshots or terminal output examples
+* Tkinter-based GUI version
+* Duplicate note detection
+* CSV import support
+* Tag-based statistics
+* More unit test coverage
+* Edit history for notes
+* Archive option for old notes
+* Installable CLI command support
+* Sample demo data
+* Terminal screenshots in README
